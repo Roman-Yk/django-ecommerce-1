@@ -1,0 +1,187 @@
+{% extends 'store/Main.html' %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/product-details.css' %}">
+    <div class="wrapper">
+        <div class="image-container">
+            <img class="productImage" src="{{ product.imageURL }}" alt="">
+        </div>  
+        <div class="info-section">
+            <p>{{product.name}}</p>
+            <p class="description">{{ product.description }}</p>
+            <p>Price: <strong>${{ product.price }}</strong></p>
+            <p>Category: {{ product.category }}</p>
+
+            <div class="number-input">
+                <button id="minus" class="update-cart" data-product={{ product.id }} data-action="remove"></button>
+                {% if request.user.is_authenticated%}
+                    <input id="input" class="quantity" min="1" name="quantity" value="{{orderitem.quantity}}" type="number">
+                {% else %}
+                    <input id="input" class="quantity" min="1" value="1" name="quantity" type="number">
+                {% endif %}
+                <button id="plus" class="plus update-cart" data-product={{ product.id }} data-action="add"></button>
+                <!-- onclick="this.parentNode.querySelector('input[type=number]').stepUp()" -->
+            </div>
+            <div class="btn_container">
+                <button id="add" class='add-to-cart update-cart' data-product={{ product.id }} data-action="add">Add to cart</button>
+                <button id="add" class='remove-from-cart update-cart' data-product={{ product.id }} data-action="delete">Remove from cart</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var updateBtns = document.getElementsByClassName('update-cart')
+        var input = document.getElementById("input")
+        var cartItems = document.getElementById("cart-total")
+        //Set up UI for displaying values
+        window.onload = () => {
+            if (user == 'AnonymousUser') {
+                totalItems = 0
+                for (const index in cart) {
+                    totalItems += cart[index]['quantity']
+                }
+                cartItems.innerHTML = totalItems
+                if(cart['{{product.id}}']['quantity'] <= 0){
+                    input.value = 1
+                }
+                else{
+                    input.value = cart['{{product.id}}']['quantity']
+                }
+            }else{
+                if('{{orderitem.quantity}}' <= 0){
+                    input.value = 1
+                }
+            }
+        }
+
+        for (var i = 0; i < updateBtns.length; i++) {
+            updateBtns[i].addEventListener('click', function(){
+                var productId = this.dataset.product
+                var action = this.dataset.action
+                console.log('productId:', productId, 'Action:', action)
+            
+            
+                console.log('USER', user)
+                if (user === 'AnonymousUser') {
+                    addCookieItem(productId, action)
+                }else
+                {
+                    updateUserOrder(productId, action)
+                }
+            
+            })
+
+        }
+
+
+function addCookieItem(productId, action) {
+    var totalItems = 0
+
+    if(action=='add'){
+        if(cart[productId] == undefined){
+            cart[productId] = {'quantity': 1}
+            //looping trough the cart to get total items
+            for (const index in cart) {
+                totalItems += cart[index]['quantity']
+            }
+            //We don't set input value because we just added 1 item to cart, not 2
+
+            //set cart total items for navbar
+            document.getElementById("cart-total").innerHTML = totalItems
+          
+        }else{
+            cart[productId]['quantity'] += 1
+            //looping trough the cart to get total items
+            for (const index in cart) {
+                totalItems += cart[index]['quantity']
+            }
+            //set input value
+            input.stepUp()
+            //set cart total items for navbar
+            document.getElementById("cart-total").innerHTML = totalItems
+
+        }
+    }
+
+    if(action == "remove"){
+        cart[productId]['quantity'] -= 1
+        //looping trough the cart to get total items
+        for (const index in cart) {
+            totalItems += cart[index]['quantity']
+        }
+        //set cart total items for navbar
+        document.getElementById("cart-total").innerHTML = totalItems
+
+        //set input value
+        input.stepDown()
+
+        // check if quantity is greater than 0 if not, then remove item
+        if(cart[productId]['quantity'] <= 0){
+            console.log("Remove Item")
+            delete cart[productId]
+        }
+    }
+
+    if(action == "delete"){
+        //set total cart value
+        var cartItems =  document.getElementById("cart-total")
+        cartItems.innerHTML = parseInt(cartItems.textContent) - parseInt(cart[productId]['quantity'])
+        //set input value
+        input.value = '1'
+        //delete item from cart
+        delete cart[productId]
+    }
+
+    console.log('Cart:', cart)
+    document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+    //location.reload()
+}
+
+
+function updateUserOrder(productId, action) {
+    console.log('User is authenticated, sending data ...')
+
+    var url = '/update_item/'
+
+    fetch(url, {
+        method: 'POST',
+        headers:{
+            'Content-Type':'application/json',
+            'X-CSRFToken': csrftoken,
+        },
+        body:JSON.stringify({'productId': productId, 'action': action})
+    })
+
+    .then((response)=>{
+        return response.json()
+    })
+
+    .then((data)=>{
+        console.log('data:', data)
+
+        //Get exact product quantity
+        var productQuantity = data['itemQuantity']
+        var cartQuantity = data['items']
+        //Check if items quanitity is greater than 0 if not, remove
+        // if(productQuantity <=0 ){
+        //    input.value = '1'
+        //    cartItems.innerHTML = parseInt(cartItems.textContent) - 1
+        // }
+
+        input.value = data['quantity']
+
+        cartItems.innerHTML = cartQuantity  
+        
+
+      
+    })
+}
+
+
+
+    </script>
+{% endblock content %}
+
+
+

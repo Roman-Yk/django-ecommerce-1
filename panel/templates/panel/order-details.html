@@ -1,0 +1,166 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/admin/order-details.css' %}">
+    <title>Document</title>
+</head>
+<script>
+    var user = '{{request.user}}'
+
+    function getToken(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+    }
+    const csrftoken = getToken('csrftoken');
+</script>
+<body>
+    <div class="container">
+        <a href="{% url 'admin-panel' %}" class="return">&#8592; Back</a>
+        <p class="customer-info">Nickname: <strong>{{ order.customer.name }}</strong></p>
+        <p class="customer-info">Customer email: <strong>{{ order.customer.email }}</strong></p>
+        <p class="customer-info">Ordered items: </p>
+        <ul>
+            {% for item in orderItems %}
+            <div class="items_wrapper">
+                <div class="image_title_wrapper" style="display: flex;">
+                    <img class="product_img" src="{{item.product.imageURL}}" alt="">
+                    <li class="items">${{item.product.price}} - {{ item.product.name }}: {{ item.quantity}}x</li>
+                </div>
+                <div class="price_wrapper" style="display: flex;">
+                    <li class="items single_total">Total price: ${{ item.get_total }}</li>
+                </div>
+            </div>    
+            <hr>
+            {% endfor %}
+            
+        </ul>
+        <p class="order-sum">Order sum: <strong>${{order.get_cart_total}}</strong></p>
+        <p class="order-sum">Shipping address:</p>
+        {% if address %}
+        <div class="address">
+            <ul>
+                <li class="address">Address: {{address.address}}</li>
+                <li class="address">City: {{address.city}}</li>
+                <li class="address">State: {{address.state}}</li>
+                <li class="address">Zipcode: {{address.zipcode}}</li>
+            </ul>
+        </div>
+        {% else %}
+            <p class='address_err'>This product is digital</p>
+        {% endif %}
+        <div class="additional-info">
+            <p class="customer-info"> Order date: <strong>{{ order.date_ordered }}</strong> </p>
+            <p class="customer-info"> Transaction id: <strong>{{ order.transaction_id }}</strong> </p>
+        </div>
+        <div class="send-info">
+            <p class="customer-info">Sended:</p>
+            <div class="checkbox_wrapper"><input id="myBtn" class="checkbox" type="checkbox" {% if order.sended %} checked {% endif %}></div>
+        </div>
+
+        <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p class="question">You want send that order?</p>
+                <button id="send-order-btn">Send</button>
+                <p id="confirmation">Action comleted!</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+        
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+        
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+        
+        //Get send btn
+        var send = document.getElementById("send-order-btn")
+        
+        var confirmation = document.getElementById("confirmation")
+
+        //set checkbox state
+        var checked = '{{order.sended}}'
+
+        // When the user clicks the button, open the modal 
+        btn.onclick = function() {
+          modal.style.display = "block";
+        }
+        
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+          modal.style.display = "none";
+          btn.checked = checked
+          confirmation.style.display = "none";
+        }
+        
+        send.onclick = function(){
+            var url = '/info/update-order-details/'
+            var order = '{{order.id}}'
+            fetch(url,{
+                method:'POST',
+                headers:{
+                'Content-Type':'application/json',
+                'X-CSRFToken': csrftoken,
+                },
+                body:JSON.stringify({'sended': btn.checked, "order": order})
+            })
+
+            .then((response)=>{
+                return response.json()
+            })
+
+            .then((data)=>{
+                console.log('sended:', data)
+                btn.checked = data['sended']
+                checked = data['sended']
+                confirmation.style.display = "block";
+            })
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+            btn.checked = checked
+            confirmation.style.display = "none";
+          }
+        }
+
+        </script>
+        
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

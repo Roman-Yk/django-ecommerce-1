@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+    <title>Document</title>
+    {% comment %} <script text="text/javascript">
+        function getToken(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getToken('csrftoken');
+    </script> {% endcomment %}
+</head>
+<body>
+    <!-- <div class="card">
+        <h2 class="log-in">Register</h2>
+        <p id="userExist" class="exist hidden">User already created please Log in</p>
+        <form class="card-form" id="form" method='post'>
+            <label for="namefield" class="label">Enter your name</label>
+            <input id="namefield" type="text" class="field namefield" placeholder="Name" required>
+
+            <label for="emailfield" class="label">Enter your email</label>
+            <input id="emailfield" type="text" class="field namefield" placeholder="Name" required>
+
+            <label for="passwordfield" class="label">Enter your password</label>
+            <input id="passwordfield" type="password" class="field passwordfield" placeholder="Password" required>
+            <p id="warning" class='warning hidden'>Passwords doesn't match</p>
+
+            <label for="passwordfieldconf" class="label">Repeat your password</label>
+            <input id="passwordfieldconf" type="password" class="field passwordfield" placeholder="Password" required>
+        
+            <button type="button" id="register" class="login-btn">Register</button>
+        </form>
+        <a class="register_link" href="{% url 'login' %}">or Log In</a>
+    </div> -->
+
+    <div class="card">
+        <a class="store-link" href="{% url 'store' %}">&#8592; Store</a>
+        <h2 class="log-in">Register</h2>
+        <form action="{% url 'register' %}" class="card-form" id="form" method='post'>
+            {% csrf_token %}
+            {% for non_field_error in form.non_field.errors %}
+                <p class="warning">{{ non_field_error }}</p>
+            {% endfor %}
+            
+            {% for field in form %}
+                <div class="fields">
+                    <label for="{{ field.id_for_label }}" class="label">{{ field.html_name|capfirst  }}</label>
+                    {{ field }}
+
+                    {% if field.help_text %}
+                        <p class="help">{{ field.help_text }}</p>
+                    {% endif %}
+
+                    {% for error in field.errors %}
+                        <p class="warning">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+
+            <input type='submit' value='Register' name='Create User' class="login-btn" id="register">
+        </form>
+
+        <a class="login_link" href="{% url 'login' %}">or Log In</a>
+    </div> 
+
+    <script src="{% static 'js/register.js' %}"></script>
+</body>
+</html>

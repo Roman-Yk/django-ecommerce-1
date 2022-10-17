@@ -1,0 +1,178 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+a{
+    text-decoration: none;
+}
+
+ul{
+    list-style: none;
+}
+
+.container{
+    width: 90%;
+    height: fit-content;
+    background-color: rgba(54, 124, 101, 0.37);
+    border-radius: 25px;
+    box-shadow: 0px 0px 20px black;
+    padding: 20px 40px;
+
+    top: 0%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.customer-info{
+    font-size: 26px;
+}
+
+ul{
+    margin-left: 5%;
+    margin-bottom: 20px;
+}
+
+.items_wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    height: 100px;
+}
+
+.product_img{
+    width: 100px;
+    height: 100px;
+}
+
+.image_title_wrapper{
+    text-align: center;
+    align-items: center;
+}
+
+.items{
+    text-align: center;
+    font-size: 20px;
+    margin-left: 20px;
+}
+
+.price_wrapper{
+    padding-right: 40px;
+}
+
+.additional-info{
+    display: flex;
+    justify-content: space-between;
+}
+
+.send-info{
+    display: flex;
+    justify-content: start;
+    margin-top: 10px;
+}
+
+.checkbox_wrapper{
+    display: flex;
+    margin-left: 10px;
+    align-items: center;
+}
+
+.checkbox{
+    height: 15px;
+    width: 15px;
+}
+
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+  
+  /* The Close Button */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .question{
+    font-size: 22px;
+  }
+
+  #send-order-btn{
+    border: none;
+    border-radius: 15px;
+    width: 150px;
+    height: 60px;
+    margin-top: 30px;
+    background-color: blue;
+    color: white;
+    font-size: 16px;
+  }
+
+  #confirmation{
+    display: none;
+    margin-top: 30px;
+    font-size: 20px;
+  }
+
+  .return{
+    width: 150px;
+    font-size: 30px;
+    border: 2px solid black;
+    padding: 5px 15px;
+    color: black;
+    display: block;
+    margin-bottom: 15px;
+    transition: ease-in 0.2s;
+  }
+  .return:hover{
+    background-color: black;
+    color: white;
+}
+
+  .order-sum{
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-size: 26px;
+  }
+
+
+  .address{
+    font-size: 20px;
+  }
+  .address_err{
+    font-size: 20px;
+    margin-bottom: 15px;
+    margin-left: 60px;
+  }

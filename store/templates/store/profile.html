@@ -1,0 +1,42 @@
+{% extends 'store/Main.html' %}
+{% load static %}
+
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
+    
+        <div class="box-element">
+            <img class="avatar" src="{{ request.user.customer.imageURL}}" alt="">
+            <form method="post" id="form" class="form" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="field-wrapper">
+                    <label for="{{ field.id_for_label }}">{{ field.html_name|capfirst }}</label>
+                    {{ field }}
+                    <!-- {% if field.html_name|lower == 'avatar' %}
+                    <div class="fileWrapper">
+                        {{ field }}
+                    </div>
+                    {% else %}
+                        {{ field }}
+                    {% endif %} -->
+
+                </div>
+                {% endfor %}
+                <div class="fileWrapper">
+                    <input class='fileInput' type="file" name="document">
+                </div>
+                <div class="field-wrapper">
+                    <a class="change_password" href="{% url 'reset_password_page' %}">Change password</a>
+                </div>
+                <input id="form-button" class="btn btn-success" type="submit" value="Submit">
+            </form>
+        </div>
+   
+
+
+
+
+{% endblock content %}
+

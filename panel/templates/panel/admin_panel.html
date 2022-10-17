@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/admin/admin-panel.css' %}">
+
+    <title>Document</title>
+</head>
+<body>
+
+<div class="container">
+    <a class="store-link" href="{% url 'store' %}">&#8592; Store</a>
+    <div class="titles">
+        <div class="sended"><h3>Sended</h3></div>
+        <div class="header_wrap">
+            <div class="headers"><h3>User email</h3></div>
+            <div class="headers"><h3>Transaction id</h3></div>
+            <div class="headers"><h3>Order date</h3></div>
+        </div>
+    </div>
+    <div class="order_list">
+        {% for order in orders %}
+        <div class="order_wrapper">
+            <div class="check"><input type="checkbox" class="sended" {% if order.sended %} checked {% endif %}></div>
+            <a href="{% url 'order-details' order.id %}" class="link_wrap">
+                <div class="li"><h3>{{ order.customer.email }}</h3></div>
+                <div class="li"><h3>{{ order.transaction_id }}</h3></div>
+                <div class="li"><h3>{{ order.date_ordered }}</h3></div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="order_wrapper empty">
+            <h4>There are no orders yet</h4>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>
+

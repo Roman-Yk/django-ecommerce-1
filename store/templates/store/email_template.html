@@ -1,0 +1,11 @@
+Hello {{name}}
+
+You just made a purchase in ecommerce store.
+
+list of items, that you purchased:
+    {% for i in orderitems %}
+        {{i.product.name}} - {{i.quantity}}x  ${{ i.product.price }}
+    {%endfor%}
+
+Order sum: ${{order.get_cart_total}}
+Order id: {{ order.transaction_id}}

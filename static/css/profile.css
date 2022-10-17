@@ -1,0 +1,58 @@
+.avatar{
+    display: block;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.form{
+    margin-top: 30px;
+    text-align: center;
+}
+.field-wrapper{
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.input{
+    width: 40%;
+    padding: 10px;
+    margin-left: 30%;
+    height: 45px;
+    font-size: 18px;
+    border-radius: 10px;
+    padding: 0 10px;
+    margin-bottom: 10px;
+
+}
+
+.fileinput{
+    margin-left: 40%;
+}
+.fileWrapper{
+    margin-bottom: 20px;
+}
+
+.fileInput{
+    margin-left: 60px;
+    
+}
+.change_password{
+    display: block;
+}
+@media(max-width: 500px){
+    .input{
+        width: 80%;
+        margin-left: 0;
+    }
+    .field-wrapper{
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+}

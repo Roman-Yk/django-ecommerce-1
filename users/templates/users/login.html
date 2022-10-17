@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/login-page.css' %}">
+    
+    <title>Document</title>
+
+
+</head>
+<body>
+
+    <div class="card">
+
+        <a class="store-link" href="{% url 'store' %}">&#8592; Store</a>
+        <h2 class="log-in">Log in</h2>
+        <form class="card-form" id="form" action="" method="post">
+            {% csrf_token %}
+            <label for="emailfield" class="label">Enter your username</label>
+            <input name="username" id="emailfield" type="text" class="field namefield" placeholder="Username" required>
+
+            <label for="passwordfield" class="label">Enter your password</label>
+            <input name="password" id="passwordfield" type="password" class="field passwordfield" placeholder="Password" required>
+            
+            <a class="change_password" href="{% url 'reset_password_page' %}">Forgot password?</a>
+
+
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+
+            <input type="submit" value='Login' class="login-btn">
+            
+        </form>
+        <a class="register_link" href="{% url 'register' %}">or register</a>
+    
+    </div>
+
+    <script src="{% static 'js/login.js' %}"></script>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+{% extends 'store/Main.html' %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/store.css' %}">
+
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+  {{ message }}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endfor %}
+
+    <div class="filter">
+        <div id='active_filter' class="filter_wrapper">
+            <ul id="category_list" class="category_list">
+                {% comment %} <li id='burger_li'  class="category-item burger_li hidden">
+                    <button id="burger" class="burger" onclick="burger()">&#10060;</button>
+                </li> {% endcomment %}
+                <li class="category-item">
+                    <button class="category-button" onclick="filterProduct('all')">All</button>
+                </li>
+                {% for choice in choices %}
+                <li class="category-item">
+                    <button class="category-button" onclick="filterProduct('{{choice}}')">{{choice}}</button>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <button id="burger" class="burger open_burger" onclick="burger()">
+            <div class='lines'></div>
+            <div class='lines'></div>
+            <div class='lines'></div></button>
+    </div>
+    <div class="row">
+        {% for product in items %}
+        <div data-category={{product.category}} class="col-lg-4 card-product {{product.category}}">
+            <img class="thumbnail" src="{{ product.imageURL }}" alt="">
+            <div class="box-element product">
+                <h6><strong>{{ product.name }}</strong></h6>
+                <hr>
+                <button data-product={{product.id}} data-action="add" class="btn btn-outline-secondary add-btn update-cart" >Add  to cart</button>
+                <a href="{% url 'detail_view' product.id %}" class="btn btn-outline-success">View</a>
+                <h4 style="display: inline-block; float: right;" >${{ product.price|floatformat:2 }}</h4>
+            </div>
+        </div>
+        {% empty %}
+            <h5>Sorry there are no products yet</h5>
+        {% endfor %}
+    </div>
+
+    <br><br>
+    <!-- {{ items }}
+    <br>
+    Has Previous: {{ items.has_previous }}
+    <br>
+    Has Next: {{ items.has_next }}
+    <br>
+    Current Page: {{ items.number }}
+    <br>
+    Number of pages: {{ items.paginator.num_pages }}
+    <hr><br><br> -->
+    <!-- {% if items.has_previous %}
+        <a href="?page=1">&laquo First</a>
+        <a href="?page={{ items.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    Page {{ items.number }} of {{ items.paginator.num_pages }}
+
+    {% if items.has_next %}
+        <a href="?page={{ items.next_page_number }}">Next</a>
+        <a href="?page={{ items.paginator.num_pages }}">Last &raquo</a>
+    {% endif %}
+    <br><br> -->
+
+<script src="{% static 'js/store.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/cart.js' %}">
+</script>
+
+{% endblock content %}
